@@ -16,13 +16,19 @@ def index(request, *args, **kwargs):
         source = urllib.request.urlopen(f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=meteric&appid={api_key}').read()
         
         list_of_data = json.loads(source)
-        data = {
-            'country_code',
-            'coordinate',
-            'temp',
-            'pressure',
-            'humidity',
-            'main',
-            'description',
-            'icon',
+        context = {
+            'country_code': str(list_of_data['sys']['country']),
+            'coordinate': str(list_of_data['coord']['lon']) + ', ' + str(list_of_data['coor']['lat']),
+            'temp': str(list_of_data['main']['temp']) + ' °C',
+            'pressure': str(list_of_data['main']['pressure']),
+            'humidity': str(list_of_data['main']['humidity']),
+            'main': str(list_of_data['weather'][0]['main']),
+            'description': str(list_of_data['weather'][0]['description']),
+            'icon': list_of_data['weather'][0]['icon'],
         }
+        print(context)
+        
+    else: 
+        context = {}
+    
+    return render(request, 'index.html', context)
